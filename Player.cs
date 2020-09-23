@@ -105,7 +105,7 @@ namespace HelloWorld
             _health += healthRestored;
         }
 
-        public void Attack(Enemy enemy)
+        public void Attack(ref Enemy enemy)
         {
             enemy.health -= (_damage + _currentWeapon.damage);
         }

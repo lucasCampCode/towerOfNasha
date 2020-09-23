@@ -34,13 +34,18 @@ namespace HelloWorld
         
         public bool Sell(Player player,int shopIndex, int playerIndex)
         {
-            return player.Buy(_inventory[shopIndex], playerIndex);
+
+            if (player.Buy(_inventory[shopIndex], playerIndex)) 
+            {
+                _gold += _inventory[shopIndex].cost;
+                return true;
+            }
+            return false;
+
+                
         }
        
-        public bool CheckPlayerFunds(Player player)
-        {
-            return player.GetGold() > 0;
-        }
+       
 
         public int Getgold()
         {

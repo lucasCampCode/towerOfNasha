@@ -25,7 +25,7 @@ namespace HelloWorld
 
 
         private bool _gameOver = false;
-        private Shop _shop = new Shop();
+        private Shop _shop;
         private Player _player1;
         private Enemy _slime;
         private Enemy _wall;
@@ -70,7 +70,7 @@ namespace HelloWorld
             _arrow.cost = 1;
             _arrow.name = "arrow";
             _arrow.damage = 5;
-            _arrow.health = -10;
+            _arrow.health = -5;
 
             _shield.cost = 20;
             _shield.name = "shield";
@@ -82,10 +82,7 @@ namespace HelloWorld
             _gem.damage = 50;
             _gem.health = 100;
 
-            _shop.AddItemToShop(_sword, 0);
-            _shop.AddItemToShop(_arrow, 1);
-            _shop.AddItemToShop(_shield, 2);
-            _shop.AddItemToShop(_gem, 3);
+
         }
 
         //possible ways to take ask a question for the user
@@ -239,7 +236,7 @@ namespace HelloWorld
         }
         private Enemy EnemyGenerator(int enemy)
         {
-            
+            Enemy enemy1;
             switch(enemy)
             {
                 case 0:
@@ -248,7 +245,8 @@ namespace HelloWorld
                         _slime.damage = 1;
                         _slime.health = 10;
                         _slime.weapon = EnemyItemGen(RandomNumber(0, 10));
-                        return _slime;
+                        enemy1 = _slime;
+                        return enemy1;
                     }
                 case 1:
                     {
@@ -256,7 +254,8 @@ namespace HelloWorld
                         _wall.damage = 1;
                         _wall.health = 10;
                         _wall.weapon = EnemyItemGen(RandomNumber(0, 10));
-                        return _wall;
+                        enemy1 = _wall;
+                        return enemy1;
                     }
                 case 2:
                     {
@@ -264,7 +263,8 @@ namespace HelloWorld
                         _hag.damage = 1;
                         _hag.health = 10;
                         _hag.weapon = EnemyItemGen(RandomNumber(0, 10));
-                        return _hag;
+                        enemy1 = _hag;
+                        return enemy1;
                     }
                 default:
                     {
@@ -272,7 +272,8 @@ namespace HelloWorld
                         _slime.damage = 1;
                         _slime.health = 10;
                         _slime.weapon = _nothing;
-                        return _slime;
+                        enemy1 = _slime;
+                        return enemy1;
                     }
             }
             
@@ -282,7 +283,6 @@ namespace HelloWorld
         {
             Console.WriteLine("welcome to the shopping district!");
             PrintInventory(_shopInventory);
-            _shop.CheckPlayerFunds(_player1);
             char input;
             int shopIndex = 0;
             int playerIndex = 0;
@@ -309,6 +309,10 @@ namespace HelloWorld
                     {
                         shopIndex = 3;
                         break;
+                    }
+                default:
+                    {
+                        return;
                     }
             }
             Console.Clear();
@@ -337,6 +341,10 @@ namespace HelloWorld
                         playerIndex = 3;
                         break;
                     }
+                default:
+                    {
+                        return;
+                    }
             }
             _shop.Sell(_player1, shopIndex, playerIndex);
         }
@@ -351,8 +359,8 @@ namespace HelloWorld
                 _player1.PrintStats();
                 Console.WriteLine("enemy stats!");
                 Console.WriteLine("monster: " + enemy.name);
-                Console.WriteLine("damage: " + enemy.damage);
-                Console.WriteLine("health: " + enemy.health);
+                Console.WriteLine("damage: " + (enemy.damage +enemy.weapon.damage));
+                Console.WriteLine("health: " + (enemy.health + enemy.weapon.health));
                 Console.WriteLine("current Weapon: " + enemy.weapon.name);
                 Console.WriteLine();
                 char input;
@@ -361,7 +369,7 @@ namespace HelloWorld
                 {
                     case '1':
                         {
-                            _player1.Attack(enemy);
+                            _player1.Attack(ref enemy);
                             break;
                         }
                     case '2':
@@ -384,7 +392,10 @@ namespace HelloWorld
                             break;
                         }
                 }
-                _player1.TakeDamage(enemy.damage + enemy.weapon.damage);
+                if(enemy.health <= 0)
+                {
+                    _player1.TakeDamage(enemy.damage + enemy.weapon.damage);
+                }
             }
         }
         public void ChangeWeapons(Player player)
@@ -422,8 +433,7 @@ namespace HelloWorld
         {
             for (int i = 0; i < items.Length; i++)
             {
-                Console.WriteLine("item " + (i + 1) + ": " + items[i].name);
-                Console.WriteLine("cost " + (i + 1) + ": " + items[i].cost);
+                Console.WriteLine((i + 1) + ": " + items[i].name +items[i].cost);
             }
         }
         //tower movement
@@ -433,7 +443,8 @@ namespace HelloWorld
         {
 
             initItems();
-            _shopInventory = _shop.Getinventory();
+            _shopInventory = new Item[]{_sword,_arrow,_shield,_gem};
+            _shop = new Shop(_shopInventory);
             Intro();
         }
         //loops till the gameOver is called true
@@ -444,7 +455,7 @@ namespace HelloWorld
             for (int i = 0; i < 5; i++)
             {
                 //grabs a random number so the player fights a new type of enemy
-                int rng = RandomNumber(0, 10);
+                int rng = RandomNumber(0, 5);
                 GetInput(out input, "explore", "hunt", "what to do next?");
                 switch (input)
                 {
@@ -465,8 +476,16 @@ namespace HelloWorld
                             break;
                         }
                 }
+                if (_player1.IsAlive() == false)
+                {
+                    break;
+                }
             }
-            OpenShopMenu();
+            if (_player1.IsAlive())
+            {
+               OpenShopMenu();
+            }
+            
         }
         //called once for end message
         public void End()
