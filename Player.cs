@@ -41,7 +41,7 @@ namespace HelloWorld
             return _name;
         }
         
-        public int checkInv()
+        public int CheckInv()
         {
             for(int i = 0; i < _inventory.Length; i++)
             {
@@ -52,6 +52,18 @@ namespace HelloWorld
             }
             return 10;
         }
+        public void PrintStats()
+        {
+            Console.WriteLine("player stats!");
+            Console.WriteLine("forever name: " + _name);
+            Console.WriteLine("base damage: " + _damage);
+            Console.WriteLine("base health: " + _health);
+            Console.WriteLine("current Weapon: " + _currentWeapon.name);
+            Console.WriteLine("weapon damage boost: " + _currentWeapon.damage);
+            Console.WriteLine("weapon health boost: " + _currentWeapon.health);
+            Console.WriteLine();
+        }
+
         
         public int GetGold() 
         {
@@ -88,8 +100,11 @@ namespace HelloWorld
                 Console.WriteLine("not enough gold");
                 return false;
             }
-            
-            
+        }
+
+        public void Heal(int healthRestored)
+        {
+            _health += healthRestored;
         }
 
         public void Attack(Enemy enemy)
@@ -104,7 +119,7 @@ namespace HelloWorld
 
         public bool IsAlive()
         {
-            return _health <= 0;
+            return _health > 0;
         }
     }
 }

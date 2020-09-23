@@ -19,13 +19,14 @@ namespace HelloWorld
         public Shop(Item[] items)
         {
             _gold = 10;
-
             _inventory = items;
         }
+
         public Item[] Getinventory()
         {
             return _inventory;
         }
+
         public void AddItemToShop(Item item,int index)
         {
             _inventory[index] = item;
@@ -38,9 +39,9 @@ namespace HelloWorld
        
         public void CheckPlayerFunds(Player player)
         {
-           
             Console.WriteLine("gold:" + player.GetGold());
         }
+
         public int Getgold()
         {
             return _gold;

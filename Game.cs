@@ -18,12 +18,16 @@ namespace HelloWorld
 
 
         private bool _gameOver = false;
-        private Player _player1;
         private Shop _shop = new Shop();
+        private Enemy _slime = new Enemy();
+        private Enemy _wall;
+        private Enemy _hag;
+        private Player _player1;       
         private Item _sword;
         private Item _arrow;
         private Item _shield;
         private Item _gem;
+        private Item _nothing;
         private Item[] _shopInventory;
 
 
@@ -46,6 +50,11 @@ namespace HelloWorld
 
         private void initItems()
         {
+            _nothing.name = "nothing";
+            _nothing.damage = 0;
+            _nothing.health = 0;
+            _nothing.cost = 0;
+
             _sword.cost = 10;
             _sword.name = "sword";
             _sword.damage = 10;
@@ -78,7 +87,26 @@ namespace HelloWorld
             Console.WriteLine(query);
             Console.WriteLine("1." + option1);
             Console.WriteLine("2." + option2);
-            Console.WriteLine("3.shop");
+            Console.Write("> ");
+
+            input = ' ';
+            while (input != '1' && input != '2')
+            {
+                input = Console.ReadKey().KeyChar;
+                Console.WriteLine();
+                if (input != '1' && input != '2')
+                {
+                    Console.WriteLine("invalid input!");
+                }
+            }
+            Console.WriteLine();
+        }
+        public void GetInput(out char input, string option1, string option2, string option3, string query)
+        {
+            Console.WriteLine(query);
+            Console.WriteLine("1." + option1);
+            Console.WriteLine("2." + option2);
+            Console.WriteLine("3." + option3);
             Console.Write("> ");
 
             input = ' ';
@@ -89,11 +117,6 @@ namespace HelloWorld
                 if (input != '1' && input != '2' && input != '3')
                 {
                     Console.WriteLine("invalid input!");
-
-                }
-                else if (input == '3')
-                {
-                    OpenShopMenu();
                 }
             }
             Console.WriteLine();
@@ -152,6 +175,8 @@ namespace HelloWorld
         //introduces player to environment and task
         public void Intro()
         {
+            Console.WriteLine("welcome traveler to Nasha!");
+            Console.WriteLine("lets start with introduction what is your name?");
             bool isWrong = true;
             while (isWrong)
             {
@@ -175,6 +200,88 @@ namespace HelloWorld
                     break;
                 }
             }
+
+        }
+
+        public Item EnemyItemGen(int item)
+        {
+            switch (item)
+            {
+                case 0:
+                    {
+                        return _sword;
+                    }
+                case 1:
+                    {
+                        return _arrow;
+                    }
+                case 2:
+                    {
+                        return _shield;
+                    }
+                case 3:
+                    {
+                        return _gem;
+                    }
+                default:
+                    {
+                        return _nothing;
+                    }
+
+            }
+        }
+        private Enemy EnemyGenerator(int enemy)
+        {
+            _hag = new Enemy("hag", 10, 50, EnemyItemGen(RandomNumber(0, 10)));
+            _wall = new Enemy("wall",20,100,EnemyItemGen(RandomNumber(0,10)));
+            switch(enemy)
+            {
+                case 0:
+                    {
+                        return _slime;
+                    }
+                case 1:
+                    {
+                        return _wall;
+                    }
+                case 2:
+                    {
+                        return _hag;
+                    }
+                case 3:
+                    {
+                        return _slime;
+                    }
+                case 4:
+                    {
+                        return _slime;
+                    }
+                case 5:
+                    {
+                        return _slime;
+                    }
+                case 6:
+                    {
+                        return _slime;
+                    }
+                case 7:
+                    {
+                        return _slime;
+                    }
+                case 8:
+                    {
+                        return _slime;
+                    }
+                case 9:
+                    {
+                        return _slime;
+                    }
+                default:
+                    {
+                        return _slime;
+                    }
+            }
+            
         }
 
         private void OpenShopMenu()
@@ -243,9 +350,72 @@ namespace HelloWorld
         {
 
         }
-        public void hunt()
+        public void hunt(Enemy enemy)
         {
-
+            while (_player1.IsAlive() && enemy.IsAlive())
+            {
+                _player1.PrintStats();
+                enemy.PrintStats();
+                char input;
+                GetInput(out input, "fight", "run","change weapons","what to do?");
+                switch (input)
+                {
+                    case '1':
+                        {
+                            _player1.Attack(enemy);
+                            break;
+                        }
+                    case '2':
+                        {
+                            int rng = RandomNumber(0, 20);
+                            if(rng > 15)
+                            {
+                                Console.WriteLine("you ran away you coward!");
+                            }
+                            else
+                            {
+                                enemy.Attack(_player1);
+                                Console.WriteLine("enemy hits you before you could get away");
+                            }
+                            break;
+                        }
+                    case '3':
+                        {
+                            ChangeWeapons(_player1);
+                            break;
+                        }
+                }
+            }
+        }
+        public void ChangeWeapons(Player player)
+        {
+            char input;
+            Item[] inventory = player.GetInventory();
+            GetInput(out input,inventory[0].name,inventory[1].name,inventory[2].name,inventory[3].name,"chose your weapon");
+            switch (input)
+            {
+                case '1':
+                    {
+                        player.EquipItem(0);
+                        break;
+                    }
+                case '2':
+                    {
+                        player.EquipItem(1);
+                        break;
+                    }
+                case '3':
+                    {
+                        player.EquipItem(2);
+                        break;
+                    }
+                case '4':
+                    {
+                        player.EquipItem(3);
+                        break;
+                    }
+            }
+            
         }
 
         public void PrintInventory(Item[] items)
@@ -268,23 +438,35 @@ namespace HelloWorld
         }
         //loops till the gameOver is called true
         public void Update()
-        {
+        {   
             char input;
-            GetInput(out input, "explore", "hunt", "what to do next?");
-            switch (input)
-            {
-                case '1':
-                    {
-                        explore();
-                        break;
-                    }
-                case '2':
-                    {
-                        hunt();
-                        break;
-                    }
-            }
 
+            for (int i = 0; i < 5; i++)
+            {
+                //grabs a random number so the player fights a new type of enemy
+                int rng = RandomNumber(0, 10);
+                GetInput(out input, "explore", "hunt", "what to do next?");
+                switch (input)
+                {
+                    case '1':
+                        {
+                            //start a exploration to regain health
+                            explore();
+                            break;
+                        }
+                    case '2':
+                        {
+                            //starts a battle scene to lose health
+                            hunt(EnemyGenerator(rng));
+                            if (_player1.IsAlive() == false)
+                            {
+                                _gameOver = true;
+                            }
+                            break;
+                        }
+                }
+            }
+            OpenShopMenu();
         }
         //called once for end message
         public void End()

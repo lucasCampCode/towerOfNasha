@@ -57,22 +57,27 @@ namespace HelloWorld
         
         public bool IsAlive()
         {
-            if (_health <= 0)
-            {
-
-                return false;
-            }
-            return true;
+            return _health > 0;
         }
         
         public void DropWeapon(Player player)
         {
-            int index = player.checkInv();
+            int index = player.CheckInv();
             if(index > 9)
             {
                 Console.WriteLine("inventory full!\nItem lost!");
             }
             player.AddItemToInv(_weapon,index);
+        }
+
+        public void PrintStats()
+        {
+            Console.WriteLine(_name + " stats!");
+            Console.WriteLine("monster: " + _name);
+            Console.WriteLine("damage: " + (_damage + _weapon.damage));
+            Console.WriteLine("health: " + (_health + _weapon.health));
+            Console.WriteLine("holding: " + _weapon.name);
+            Console.WriteLine();
         }
     }
 }
