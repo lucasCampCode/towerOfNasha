@@ -11,6 +11,13 @@ namespace HelloWorld
         public int damage;
         public int health;
     }
+    struct Enemy
+    {
+        public string name;
+        public int damage;
+        public int health;
+        public Item weapon;
+    }
     class Game
     {
         //made a random controlable variable for later use
@@ -19,10 +26,10 @@ namespace HelloWorld
 
         private bool _gameOver = false;
         private Shop _shop = new Shop();
-        private Enemy _slime = new Enemy();
+        private Player _player1;
+        private Enemy _slime;
         private Enemy _wall;
-        private Enemy _hag;
-        private Player _player1;       
+        private Enemy _hag;    
         private Item _sword;
         private Item _arrow;
         private Item _shield;
@@ -232,52 +239,39 @@ namespace HelloWorld
         }
         private Enemy EnemyGenerator(int enemy)
         {
-            _hag = new Enemy("hag", 10, 50, EnemyItemGen(RandomNumber(0, 10)));
-            _wall = new Enemy("wall",20,100,EnemyItemGen(RandomNumber(0,10)));
+            
             switch(enemy)
             {
                 case 0:
                     {
+                        _slime.name = "slime";
+                        _slime.damage = 1;
+                        _slime.health = 10;
+                        _slime.weapon = EnemyItemGen(RandomNumber(0, 10));
                         return _slime;
                     }
                 case 1:
                     {
+                        _wall.name = "slime";
+                        _wall.damage = 1;
+                        _wall.health = 10;
+                        _wall.weapon = EnemyItemGen(RandomNumber(0, 10));
                         return _wall;
                     }
                 case 2:
                     {
+                        _hag.name = "slime";
+                        _hag.damage = 1;
+                        _hag.health = 10;
+                        _hag.weapon = EnemyItemGen(RandomNumber(0, 10));
                         return _hag;
-                    }
-                case 3:
-                    {
-                        return _slime;
-                    }
-                case 4:
-                    {
-                        return _slime;
-                    }
-                case 5:
-                    {
-                        return _slime;
-                    }
-                case 6:
-                    {
-                        return _slime;
-                    }
-                case 7:
-                    {
-                        return _slime;
-                    }
-                case 8:
-                    {
-                        return _slime;
-                    }
-                case 9:
-                    {
-                        return _slime;
                     }
                 default:
                     {
+                        _slime.name = "slime";
+                        _slime.damage = 1;
+                        _slime.health = 10;
+                        _slime.weapon = _nothing;
                         return _slime;
                     }
             }
@@ -352,10 +346,15 @@ namespace HelloWorld
         }
         public void hunt(Enemy enemy)
         {
-            while (_player1.IsAlive() && enemy.IsAlive())
+            while (_player1.IsAlive() && enemy.health > 0)
             {
                 _player1.PrintStats();
-                enemy.PrintStats();
+                Console.WriteLine("enemy stats!");
+                Console.WriteLine("monster: " + enemy.name);
+                Console.WriteLine("damage: " + enemy.damage);
+                Console.WriteLine("health: " + enemy.health);
+                Console.WriteLine("current Weapon: " + enemy.weapon.name);
+                Console.WriteLine();
                 char input;
                 GetInput(out input, "fight", "run","change weapons","what to do?");
                 switch (input)
@@ -374,7 +373,7 @@ namespace HelloWorld
                             }
                             else
                             {
-                                enemy.Attack(_player1);
+                                _player1.TakeDamage(enemy.damage + enemy.weapon.damage);
                                 Console.WriteLine("enemy hits you before you could get away");
                             }
                             break;
@@ -385,6 +384,7 @@ namespace HelloWorld
                             break;
                         }
                 }
+                _player1.TakeDamage(enemy.damage + enemy.weapon.damage);
             }
         }
         public void ChangeWeapons(Player player)

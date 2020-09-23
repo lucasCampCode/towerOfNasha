@@ -107,7 +107,7 @@ namespace HelloWorld
 
         public void Attack(Enemy enemy)
         {
-            enemy.TakeDamage(_damage);
+            enemy.health -= (_damage + _currentWeapon.damage);
         }
 
         public void TakeDamage(int damageVal)
