@@ -52,6 +52,7 @@ namespace HelloWorld
             }
             return 10;
         }
+
         public void PrintStats()
         {
             Console.WriteLine("player stats!");
@@ -59,12 +60,9 @@ namespace HelloWorld
             Console.WriteLine("base damage: " + _damage);
             Console.WriteLine("base health: " + _health);
             Console.WriteLine("current Weapon: " + _currentWeapon.name);
-            Console.WriteLine("weapon damage boost: " + _currentWeapon.damage);
-            Console.WriteLine("weapon health boost: " + _currentWeapon.health);
             Console.WriteLine();
         }
-
-        
+ 
         public int GetGold() 
         {
             return _gold;
@@ -109,7 +107,7 @@ namespace HelloWorld
 
         public void Attack(Enemy enemy)
         {
-            enemy.TakeDamage(_damage + _currentWeapon.damage);
+            enemy.TakeDamage(_damage);
         }
 
         public void TakeDamage(int damageVal)

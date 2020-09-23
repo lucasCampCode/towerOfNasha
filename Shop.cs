@@ -37,9 +37,9 @@ namespace HelloWorld
             return player.Buy(_inventory[shopIndex], playerIndex);
         }
        
-        public void CheckPlayerFunds(Player player)
+        public bool CheckPlayerFunds(Player player)
         {
-            Console.WriteLine("gold:" + player.GetGold());
+            return player.GetGold() > 0;
         }
 
         public int Getgold()
