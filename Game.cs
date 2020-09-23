@@ -283,6 +283,7 @@ namespace HelloWorld
         {
             Console.WriteLine("welcome to the shopping district!");
             PrintInventory(_shopInventory);
+            _shop.CheckPlayerFunds(_player1);
             char input;
             int shopIndex = 0;
             int playerIndex = 0;
@@ -310,10 +311,6 @@ namespace HelloWorld
                         shopIndex = 3;
                         break;
                     }
-                default:
-                    {
-                        return;
-                    }
             }
             Console.Clear();
             PrintInventory(_player1.GetInventory());
@@ -340,10 +337,6 @@ namespace HelloWorld
                     {
                         playerIndex = 3;
                         break;
-                    }
-                default:
-                    {
-                        return;
                     }
             }
             _shop.Sell(_player1, shopIndex, playerIndex);
@@ -433,7 +426,8 @@ namespace HelloWorld
         {
             for (int i = 0; i < items.Length; i++)
             {
-                Console.WriteLine((i + 1) + ": " + items[i].name +items[i].cost);
+                Console.WriteLine("item " + (i + 1) + ": " + items[i].name);
+                Console.WriteLine("cost " + (i + 1) + ": " + items[i].cost);
             }
         }
         //tower movement
