@@ -81,8 +81,6 @@ namespace HelloWorld
             _gem.name = "gem";
             _gem.damage = 50;
             _gem.health = 100;
-
-
         }
 
         //possible ways to take ask a question for the user
@@ -143,6 +141,35 @@ namespace HelloWorld
                 {
                     Console.WriteLine("invalid input!");
                 }
+            }
+            Console.WriteLine();
+        }
+        public void GetInput(out char input, string option1, string option2, string option3, string option4, string query, bool messUp)
+        {
+            Console.WriteLine(query);
+            Console.WriteLine("1." + option1);
+            Console.WriteLine("2." + option2);
+            Console.WriteLine("3." + option3);
+            Console.WriteLine("4." + option4);
+            Console.Write("> ");
+
+            input = ' ';
+            if (messUp == false)
+            {
+                while (input != '1' && input != '2' && input != '3' && input != '4')
+                {
+                    input = Console.ReadKey().KeyChar;
+                    Console.WriteLine();
+                    if (input != '1' && input != '2' && input != '3' && input != '4')
+                    {
+                        Console.WriteLine("invalid input!");
+                    }
+                }
+            }
+            else
+            {
+                input = Console.ReadKey().KeyChar;
+                Console.WriteLine();
             }
             Console.WriteLine();
         }
@@ -234,6 +261,7 @@ namespace HelloWorld
 
             }
         }
+
         private Enemy EnemyGenerator(int enemy)
         {
             Enemy enemy1;
@@ -283,7 +311,7 @@ namespace HelloWorld
         {
             Console.WriteLine("welcome to the shopping district!");
             PrintInventory(_shopInventory);
-            _shop.CheckPlayerFunds(_player1);
+
             char input;
             int shopIndex = 0;
             int playerIndex = 0;
@@ -341,6 +369,7 @@ namespace HelloWorld
             }
             _shop.Sell(_player1, shopIndex, playerIndex);
         }
+
         public void explore()
         {
 
@@ -391,31 +420,42 @@ namespace HelloWorld
                 }
             }
         }
+
         public void ChangeWeapons(Player player)
         {
             char input;
             Item[] inventory = player.GetInventory();
-            GetInput(out input,inventory[0].name,inventory[1].name,inventory[2].name,inventory[3].name,"chose your weapon");
+            GetInput(out input,inventory[0].name,inventory[1].name,inventory[2].name,inventory[3].name,"chose your weapon",true);
             switch (input)
             {
                 case '1':
                     {
                         player.EquipItem(0);
+                        Console.WriteLine("you equiped " + inventory[0].name);
                         break;
                     }
                 case '2':
                     {
                         player.EquipItem(1);
+                        Console.WriteLine("you equiped " + inventory[1].name);
                         break;
                     }
                 case '3':
                     {
                         player.EquipItem(2);
+                        Console.WriteLine("you equiped " + inventory[2].name);
                         break;
                     }
                 case '4':
                     {
                         player.EquipItem(3);
+                        Console.WriteLine("you equiped " + inventory[3].name);
+                        break;
+                    }
+                default:
+                    {
+                        player.UnEquip();
+                        Console.WriteLine("you disarmed yourself");
                         break;
                     }
             }

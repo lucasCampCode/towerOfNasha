@@ -76,6 +76,10 @@ namespace HelloWorld
             }
         }
 
+        public void UnEquip()
+        {
+            _currentWeapon = _empty;
+        }
         public bool Contains(int itemIndex)
         {
             if (itemIndex > 0 && itemIndex < _inventory.Length)

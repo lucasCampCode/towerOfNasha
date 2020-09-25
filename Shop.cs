@@ -45,8 +45,6 @@ namespace HelloWorld
                 
         }
        
-       
-
         public int Getgold()
         {
             return _gold;
